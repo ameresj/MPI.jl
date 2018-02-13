@@ -63,6 +63,10 @@ Allreduce!(sendbuf::MPIBuffertype{T}, recvbuf::MPIBuffertype{T},
            count::Integer, opfunc::Function, comm::Comm) where {T} =
     Allreduce!(sendbuf, recvbuf, count, user_op(opfunc), comm)
 
+IAllreduce!(sendbuf::MPIBuffertype{T}, recvbuf::MPIBuffertype{T},
+               count::Integer, opfunc::Function, comm::Comm) where {T} =
+        IAllreduce!(sendbuf, recvbuf, count, user_op(opfunc), comm)
+
 Reduce(sendbuf::MPIBuffertype{T}, count::Integer,
        opfunc::Function, root::Integer, comm::Comm) where {T} =
     Reduce(sendbuf, count, user_op(opfunc), root, comm)

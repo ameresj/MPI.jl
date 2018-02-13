@@ -40,6 +40,7 @@ int main(int argc, char *argv[]) {
   printf("    :MPI_GET_COUNT          => \"%s\",\n", STRING(MPI_GET_COUNT));
   printf("    :MPI_GET_PROCESSOR_NAME => \"%s\",\n",
          STRING(MPI_GET_PROCESSOR_NAME));
+  printf("    :MPI_IALLREDUCE         => \"%s\",\n", STRING(MPI_IALLREDUCE));
   printf("    :MPI_INIT               => \"%s\",\n", STRING(MPI_INIT));
   printf("    :MPI_INITIALIZED        => \"%s\",\n", STRING(MPI_INITIALIZED));
   printf("    :MPI_IPROBE             => \"%s\",\n", STRING(MPI_IPROBE));
@@ -71,9 +72,9 @@ int main(int argc, char *argv[]) {
   printf("    :MPI_WAITANY            => \"%s\",\n", STRING(MPI_WAITANY));
   printf("    :MPI_WAITSOME           => \"%s\",\n", STRING(MPI_WAITSOME));
   printf("    :MPI_WTIME              => \"%s\",\n", STRING(MPI_WTIME));
-  printf("    :MPI_TYPE_CREATE_STRUCT => \"%s\",\n", 
+  printf("    :MPI_TYPE_CREATE_STRUCT => \"%s\",\n",
          STRING(MPI_TYPE_CREATE_STRUCT));
-  printf("    :MPI_TYPE_COMMIT        => \"%s\",\n", 
+  printf("    :MPI_TYPE_COMMIT        => \"%s\",\n",
          STRING(MPI_TYPE_COMMIT));
   printf(")\n");
   printf("\n");

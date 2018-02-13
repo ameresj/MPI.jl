@@ -601,11 +601,44 @@ function Allreduce(obj::T, op::Union{Op,Function}, comm::Comm) where T
 end
 
 # allocate receive buffer automatically
-function allreduce(sendbuf::MPIBuffertype{T}, op::Union{Op,Function}, comm::Comm) where T
+function allreduce(sendbuf::MPIBuffertype{T}, op::Union{Op,Function},
+                                                            comm::Comm) where T
 
   recvbuf = similar(sendbuf)
   Allreduce!(sendbuf, recvbuf, length(recvbuf), op, comm)
 end
+
+#Non-blocking allreduce, MPI 3.0
+function IAllreduce!(sendbuf::MPIBuffertype{T}, recvbuf::MPIBuffertype{T},
+                   count::Integer, op::Op, comm::Comm) where T
+    rval = Ref{Cint}()
+    ccall(MPI_IALLREDUCE, Void, (Ptr{T}, Ptr{T}, Ptr{Cint}, Ptr{Cint}, Ptr{Cint},
+          Ptr{Cint}, Ptr{Cint}, Ptr{Cint}), sendbuf, recvbuf, &count,
+          &mpitype(T), &op.val, &comm.val, rval,&0)
+
+    Request(rval[], sendbuf)
+end
+
+function IAllreduce!(sendbuf::MPIBuffertype{T}, recvbuf::MPIBuffertype{T},
+                   op::Union{Op,Function}, comm::Comm) where T
+    IAllreduce!(sendbuf, recvbuf, length(recvbuf), op, comm)
+end
+
+function IAllreduce(obj::T, op::Union{Op,Function}, comm::Comm) where T
+    objref = Ref(obj)
+    outref = Ref{T}()
+    req=IAllreduce!(objref, outref, 1, op, comm)
+    return req,outref[]
+end
+
+function iallreduce(sendbuf::MPIBuffertype{T}, op::Union{Op,Function},
+                            comm::Comm) where T
+  recvbuf = similar(sendbuf)
+  req=IAllreduce!(sendbuf, recvbuf, length(recvbuf), op, comm)
+  return req,recvbuf
+end
+
+
 
 include("mpi-op.jl")
 
