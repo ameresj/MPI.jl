@@ -609,7 +609,7 @@ function allreduce(sendbuf::MPIBuffertype{T}, op::Union{Op,Function},
 end
 
 #Non-blocking allreduce, MPI 3.0
-function IAllreduce!(sendbuf::MPIBuffertype{T}, recvbuf::MPIBuffertype{T},
+function Iallreduce!(sendbuf::MPIBuffertype{T}, recvbuf::MPIBuffertype{T},
                    count::Integer, op::Op, comm::Comm) where T
     rval = Ref{Cint}()
     ccall(MPI_IALLREDUCE, Void, (Ptr{T}, Ptr{T}, Ptr{Cint}, Ptr{Cint}, Ptr{Cint},
@@ -619,22 +619,22 @@ function IAllreduce!(sendbuf::MPIBuffertype{T}, recvbuf::MPIBuffertype{T},
     Request(rval[], sendbuf)
 end
 
-function IAllreduce!(sendbuf::MPIBuffertype{T}, recvbuf::MPIBuffertype{T},
+function Iallreduce!(sendbuf::MPIBuffertype{T}, recvbuf::MPIBuffertype{T},
                    op::Union{Op,Function}, comm::Comm) where T
-    IAllreduce!(sendbuf, recvbuf, length(recvbuf), op, comm)
+    Iallreduce!(sendbuf, recvbuf, length(recvbuf), op, comm)
 end
 
-function IAllreduce(obj::T, op::Union{Op,Function}, comm::Comm) where T
+function Iallreduce(obj::T, op::Union{Op,Function}, comm::Comm) where T
     objref = Ref(obj)
     outref = Ref{T}()
-    req=IAllreduce!(objref, outref, 1, op, comm)
+    req=Iallreduce!(objref, outref, 1, op, comm)
     return req,outref[]
 end
 
 function iallreduce(sendbuf::MPIBuffertype{T}, op::Union{Op,Function},
                             comm::Comm) where T
   recvbuf = similar(sendbuf)
-  req=IAllreduce!(sendbuf, recvbuf, length(recvbuf), op, comm)
+  req=Iallreduce!(sendbuf, recvbuf, length(recvbuf), op, comm)
   return req,recvbuf
 end
 

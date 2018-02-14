@@ -10,7 +10,7 @@ send_arr = Int[1, 2, 3]
 for op in (MPI.SUM, +, (x,y) -> 2x+y-x)
   recv_arr = zeros(Int, 3)
 
-  req=MPI.IAllreduce!(send_arr, recv_arr, op, MPI.COMM_WORLD)
+  req=MPI.Iallreduce!(send_arr, recv_arr, op, MPI.COMM_WORLD)
 
   MPI.Wait!(req)
 
@@ -19,7 +19,7 @@ for op in (MPI.SUM, +, (x,y) -> 2x+y-x)
   end
 
 
-  req,val = MPI.IAllreduce(2, op, MPI.COMM_WORLD)
+  req,val = MPI.Iallreduce(2, op, MPI.COMM_WORLD)
 
   MPI.Wait!(req)
 
